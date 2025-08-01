@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pakistan Salary & Tax Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+        
+        .input-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .control-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .control-section h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 10px;
+        }
+        
+        .tax-bracket {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .bracket-info {
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .tax-input {
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 16px;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .tax-input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .salary-generator-section {
+            background: #e8f5e8;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #28a745;
+            margin-bottom: 20px;
+        }
+        
+        .generator-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .total-salary-input {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .total-salary-input label {
+            font-weight: 600;
+            color: #155724;
+            font-size: 1.1em;
+        }
+        
+        .total-salary-input input {
+            padding: 12px;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            transition: all 0.3s ease;
+            align-self: flex-start;
+            margin-top: 10px;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+        
+        .salary-breakdown-section {
+            background: #fff3cd;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #ffc107;
+        }
+        
+        .salary-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .input-group input {
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .calculate-btn {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+        }
+        
+        .results {
+            margin-top: 30px;
+        }
+        
+        .result-section {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+        }
+        
+        .result-section h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-size: 1.4em;
+        }
+        
+        .currency {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        
+        .breakdown {
+            background: linear-gradient(135deg, #e8f5e8, #f0f8ff);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 5px solid #28a745;
+        }
+        
+        .breakdown h4 {
+            color: #155724;
+            margin-bottom: 15px;
+        }
+        
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #d4edda;
+        }
+        
+        .total-item {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #155724;
+            border-top: 2px solid #28a745;
+            padding-top: 12px;
+            margin-top: 8px;
+        }
+        
+        .reset-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .reset-btn:hover {
+            background: #5a6268;
+        }
+        
+        @media (max-width: 1200px) {
+            .input-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .salary-inputs {
+                grid-template-columns: 1fr;
+            }
+            
+            .breakdown-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .generator-inputs {
+                gap: 10px;
+            }
+            
+            .total-salary-input {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .generate-btn {
+                align-self: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧮 Pakistan Salary & Tax Calculator</h1>
+        <p class="subtitle">Interactive Tax Calculator with Auto Salary Breakdown Generator</p>
+        
+        <div class="input-section">
+            <div class="control-section">
+                <h3>📊 Tax Structure</h3>
+                <div class="tax-bracket">
+                    <div class="bracket-info">Up to 600,000 PKR</div>
+                    <input type="number" class="tax-input" id="tax-rate-1" value="0" step="0.1" min="0" max="100">
+                </div>
+                <div class="tax-bracket">
+                    <div class="bracket-info">600,001 - 1,200,000 PKR</div>
+                    <input type="number" class="tax-input" id="tax-rate-2" value="1" step="0.1" min="0" max="100">
+                </div>
+                <div class="tax-bracket">
+                    <div class="bracket-info">1,200,001 - 2,200,000 PKR</div>
+                    <input type="number" class="tax-input" id="tax-rate-3" value="11" step="0.1" min="0" max="100">
+                </div>
+                <div class="tax-bracket">
+                    <div class="bracket-info">2,200,001 - 3,200,000 PKR</div>
+                    <input type="number" class="tax-input" id="tax-rate-4" value="23" step="0.1" min="0" max="100">
+                </div>
+                <div class="tax-bracket">
+                    <div class="bracket-info">3,200,001 - 4,100,000 PKR</div>
+                    <input type="number" class="tax-input" id="tax-rate-5" value="30" step="0.1" min="0" max="100">
+                </div>
+                <div class="tax-bracket">
+                    <div class="bracket-info">Above 4,100,000 PKR</div>
+                    <input type="number" class="tax-input" id="tax-rate-6" value="35" step="0.1" min="0" max="100">
+                </div>
+                <button class="reset-btn" onclick="resetTaxRates()">Reset to Default</button>
+            </div>
+            
+            <div class="salary-generator-section">
+                <h3>🎯 Auto Salary Breakdown Generator</h3>
+                <div class="generator-inputs">
+                    <div class="total-salary-input">
+                        <label for="total-salary">Total Monthly Salary:</label>
+                        <input type="number" id="total-salary" placeholder="Enter total salary (PKR)" value="110000" step="1000">
+                    </div>
+                    <div class="total-salary-input">
+                        <label for="fixed-work-expense">Work Expense (Fixed):</label>
+                        <input type="number" id="fixed-work-expense" placeholder="Enter work expense (PKR)" step="1000" value="0">
+                    </div>
+                    <div class="total-salary-input">
+                        <label for="fixed-dollar-value">Dollar Rate (PKR):</label>
+                        <input type="number" id="fixed-dollar-value" placeholder="Enter current Dollar value (PKR)" value="280">
+                    </div>
+                    <button class="generate-btn" onclick="generateSalaryBreakdown()">🔄 Generate</button>
+                </div>
+                <p style="color: #155724; font-size: 0.9em; margin-top: 10px;">
+                    💡 Enter your total monthly salary and fixed work expense, then click Generate to automatically create an optimized salary breakdown
+                </p>
+            </div>
+        </div>
+        
+        <div class="salary-breakdown-section">
+            <h3>💰 Salary Breakdown</h3>
+            <div class="salary-inputs">
+                <div class="input-group">
+                    <label for="basic-salary">Basic Salary (PKR)</label>
+                    <input type="number" id="basic-salary" value="66000" step="1000">
+                </div>
+                <div class="input-group">
+                    <label for="house-allowance">House Allowance (PKR)</label>
+                    <input type="number" id="house-allowance" value="22000" step="1000">
+                </div>
+                <div class="input-group">
+                    <label for="utilities">Utilities (PKR)</label>
+                    <input type="number" id="utilities" value="11000" step="1000">
+                </div>
+                <div class="input-group">
+                    <label for="work-expense">Work Expense (Tax-Exempt)</label>
+                    <input type="number" id="work-expense" value="0" step="1000">
+                </div>
+                <div class="input-group">
+                    <label for="medical">Medical (Tax-Exempt)</label>
+                    <input type="number" id="medical" value="11000" step="1000">
+                </div>
+                <div class="input-group">
+                    <label for="pf-rate">PF Rate (%)</label>
+                    <input type="number" id="pf-rate" value="5" step="0.1" min="0" max="20">
+                </div>
+            </div>
+        </div>
+        
+        <button class="calculate-btn" onclick="calculateSalary()">🔄 Calculate Salary</button>
+        
+        <div class="results">
+            <div class="result-section">
+                <h2>📊 Salary Calculation Results</h2>
+                <div class="breakdown">
+                    <h4>Salary Breakdown</h4>
+                    <div class="breakdown-grid">
+                        <div>
+                            <div class="breakdown-item">
+                                <span>Basic Salary:</span>
+                                <span class="currency" id="result-basic">Rs. 0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span>House Allowance:</span>
+                                <span class="currency" id="result-house">Rs. 0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span>Utilities:</span>
+                                <span class="currency" id="result-utilities">Rs. 0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span>Work Expense:</span>
+                                <span class="currency" id="result-work">Rs. 0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span>Medical:</span>
+                                <span class="currency" id="result-medical">Rs. 0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span>Employer PF:</span>
+                                <span class="currency" id="result-emp-pf">Rs. 0</span>
+                            </div>
+                            <div class="breakdown-item total-item">
+                                <span>Total Gross:</span>
+                                <span class="currency" id="result-gross">Rs. 0</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="breakdown-item">
+                                <span>Taxable Income:</span>
+                                <span class="currency" id="result-taxable">Rs. 0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span>Annual Taxable:</span>
+                                <span class="currency" id="result-annual-taxable">Rs. 0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span>Annual Tax:</span>
+                                <span class="currency" id="result-annual-tax">Rs. 0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span>Monthly Tax:</span>
+                                <span class="currency" id="result-monthly-tax">Rs. 0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span>Employee PF:</span>
+                                <span class="currency" id="result-emp-pf-ded">Rs. 0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span>Total Deductions:</span>
+                                <span class="currency" id="result-total-ded">Rs. 0</span>
+                            </div>
+                            <div class="breakdown-item total-item">
+                                <span>Take-Home Pay:</span>
+                                <span class="currency" id="result-takehome">Rs. 0</span>
+                            </div>
+                            <div class="breakdown-item total-item" style="border-top: 2px solid #007bff; color: #007bff;">
+                                <span>Total Gross (USD):</span>
+                                <span class="currency" id="result-gross-usd">$0</span>
+                            </div>
+                            <div class="breakdown-item total-item" style="color: #007bff;">
+                                <span>Take-Home (USD):</span>
+                                <span class="currency" id="result-takehome-usd">$0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatCurrency(amount) {
+            return `Rs. ${Math.round(amount).toLocaleString()}`;
+        }
+        
+        function formatUSD(amount) {
+            const dollarValue = parseFloat(document.getElementById('fixed-dollar-value').value) || 0;
+            const usdAmount = amount / dollarValue;
+            return `$${Math.round(usdAmount).toLocaleString()}`;
+        }
+        
+       function calculateTax(annualIncome, rates) {
+            let tax = 0;
+
+            if (annualIncome <= 600000) {
+                tax = 0;
+            } else if (annualIncome <= 1200000) {
+                tax = (annualIncome - 600000) * (rates[1] / 100);
+            } else if (annualIncome <= 2200000) {
+                tax = 6000 + (annualIncome - 1200000) * (rates[2] / 100);
+            } else if (annualIncome <= 3200000) {
+                tax = 116000 + (annualIncome - 2200000) * (rates[3] / 100);
+            } else if (annualIncome <= 4100000) {
+                tax = 346000 + (annualIncome - 3200000) * (rates[4] / 100);
+            } else {
+                tax = 616000 + (annualIncome - 4100000) * (rates[5] / 100);
+            }
+
+            return Math.max(0, tax);
+        }
+        
+        function getTaxRates() {
+            return [
+                parseFloat(document.getElementById('tax-rate-1').value),
+                parseFloat(document.getElementById('tax-rate-2').value),
+                parseFloat(document.getElementById('tax-rate-3').value),
+                parseFloat(document.getElementById('tax-rate-4').value),
+                parseFloat(document.getElementById('tax-rate-5').value),
+                parseFloat(document.getElementById('tax-rate-6').value)
+            ];
+        }
+        
+        function getSalaryInputs() {
+            return {
+                basic: parseFloat(document.getElementById('basic-salary').value) || 0,
+                house: parseFloat(document.getElementById('house-allowance').value) || 0,
+                utilities: parseFloat(document.getElementById('utilities').value) || 0,
+                workExpense: parseFloat(document.getElementById('work-expense').value) || 0,
+                medical: parseFloat(document.getElementById('medical').value) || 0,
+                pfRate: parseFloat(document.getElementById('pf-rate').value) || 0
+            };
+        }
+        
+        function generateSalaryBreakdown() {
+            const totalSalary = parseFloat(document.getElementById('total-salary').value);
+            const fixedWorkExpense = parseFloat(document.getElementById('fixed-work-expense').value) || 0;
+
+            if (!totalSalary || totalSalary <= 0) {
+                alert('Please enter a valid total salary amount');
+                return;
+            }
+            
+            // Calculate remaining amount after deducting fixed work expense
+            const remainingSalary = totalSalary - fixedWorkExpense;
+            
+            if (remainingSalary <= 0) {
+                alert('Work expense cannot be greater than or equal to total salary');
+                return;
+            }
+            
+            // Optimized breakdown percentages for remaining amount
+            const basic = Math.round(remainingSalary * 0.60); // 60% of remaining for basic
+            const house = Math.round(remainingSalary * 0.20); // 20% of remaining for house allowance
+            const utilities = Math.round(remainingSalary * 0.10); // 10% of remaining for utilities
+            const medical = Math.round(remainingSalary * 0.10); // 10% of remaining for medical
+            
+            // Update the input fields
+            document.getElementById('basic-salary').value = basic;
+            document.getElementById('house-allowance').value = house;
+            document.getElementById('utilities').value = utilities;
+            document.getElementById('work-expense').value = fixedWorkExpense;
+            document.getElementById('medical').value = medical;
+            
+            // Auto-calculate after generating breakdown
+            calculateSalary();
+            
+            // Show success message
+            alert(`Salary breakdown generated successfully!\nTotal: Rs. ${totalSalary.toLocaleString()}\nWork Expense (Fixed): Rs. ${fixedWorkExpense.toLocaleString()}\nRemaining allocated: Rs. ${remainingSalary.toLocaleString()}`);
+        }
+        
+        function calculateSalary() {
+            const salary = getSalaryInputs();
+            const rates = getTaxRates();
+            
+            const employerPF = Math.round(salary.basic * (salary.pfRate / 100));
+            const employeePF = Math.round(salary.basic * (salary.pfRate / 100));
+            const totalGross = salary.basic + salary.house + salary.utilities + salary.workExpense + salary.medical + employerPF;
+            const taxableMonthly = salary.basic + salary.house + salary.utilities + employerPF;
+            const annualTaxable = taxableMonthly * 12;
+            const grossSalary = salary.basic + salary.house + salary.utilities + salary.workExpense + salary.medical;
+            
+            const annualTax = calculateTax(annualTaxable, rates);
+            const monthlyTax = Math.round(annualTax / 12);
+            const totalDeductions = monthlyTax + employeePF;
+            const takeHome = grossSalary - totalDeductions;
+            
+            // Update UI
+            document.getElementById('result-basic').textContent = formatCurrency(salary.basic);
+            document.getElementById('result-house').textContent = formatCurrency(salary.house);
+            document.getElementById('result-utilities').textContent = formatCurrency(salary.utilities);
+            document.getElementById('result-work').textContent = formatCurrency(salary.workExpense);
+            document.getElementById('result-medical').textContent = formatCurrency(salary.medical);
+            document.getElementById('result-emp-pf').textContent = formatCurrency(employerPF);
+            document.getElementById('result-gross').textContent = formatCurrency(totalGross);
+            document.getElementById('result-taxable').textContent = formatCurrency(taxableMonthly);
+            document.getElementById('result-annual-taxable').textContent = formatCurrency(annualTaxable);
+            document.getElementById('result-annual-tax').textContent = formatCurrency(annualTax);
+            document.getElementById('result-monthly-tax').textContent = formatCurrency(monthlyTax);
+            document.getElementById('result-emp-pf-ded').textContent = formatCurrency(employeePF);
+            document.getElementById('result-total-ded').textContent = formatCurrency(totalDeductions);
+            document.getElementById('result-takehome').textContent = formatCurrency(takeHome);
+            document.getElementById('result-gross-usd').textContent = formatUSD(totalGross);
+            document.getElementById('result-takehome-usd').textContent = formatUSD(takeHome);
+        }
+        
+        function resetTaxRates() {
+            document.getElementById('tax-rate-1').value = 0;
+            document.getElementById('tax-rate-2').value = 1;
+            document.getElementById('tax-rate-3').value = 11;
+            document.getElementById('tax-rate-4').value = 23;
+            document.getElementById('tax-rate-5').value = 30;
+            document.getElementById('tax-rate-6').value = 35;
+        }
+        
+        // Initialize with default calculation
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateSalary();
+        });
+    </script>
+</body>
+</html>
